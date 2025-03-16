@@ -8,6 +8,7 @@ WITH json_rows AS (
   SELECT 
     Id AS ReportId,
     ReportDateTime,
+    AppName,
     json_extract(Report, '$.auditReportVersion') AS AuditVersion,
     Report
   FROM AuditReports
@@ -17,6 +18,7 @@ package_keys AS (
     jr.ReportId, 
     jr.ReportDateTime,
     jr.AuditVersion,
+    jr.AppName,
     json_each.key AS PackageName
   FROM json_rows jr, 
   json_each(json_extract(jr.Report, '$.vulnerabilities'))
@@ -24,6 +26,7 @@ package_keys AS (
 SELECT 
   pk.ReportId,
   pk.ReportDateTime,
+  pk.AppName,
   pk.AuditVersion,
   pk.PackageName,
   json_extract(jr.Report, '$.vulnerabilities.' || pk.PackageName || '.severity') AS Severity,
@@ -49,6 +52,7 @@ WITH json_rows AS (
   SELECT 
     Id AS ReportId,
     ReportDateTime,
+    AppName,
     json_extract(Report, '$.auditReportVersion') AS AuditVersion,
     Report
   FROM AuditReports
@@ -58,6 +62,7 @@ package_keys AS (
     jr.ReportId, 
     jr.ReportDateTime,
     jr.AuditVersion,
+    jr.AppName,
     json_each.key AS PackageName
   FROM json_rows jr, 
   json_each(json_extract(jr.Report, '$.vulnerabilities'))
@@ -65,6 +70,7 @@ package_keys AS (
 SELECT 
   pk.ReportId,
   pk.ReportDateTime,
+  pk.AppName,
   pk.PackageName,
   json_extract(jr.Report, '$.vulnerabilities.' || pk.PackageName || '.severity') AS PackageSeverity,
   json_extract(v.value, '$.title') AS VulnerabilityTitle,
