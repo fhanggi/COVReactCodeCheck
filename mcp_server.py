@@ -4,6 +4,9 @@ import sqlite3
 from loguru import logger
 from mcp.server.fastmcp import FastMCP
 
+# Configure Loguru to log to a file
+logger.add("server.log", rotation="1 MB", retention="7 days", compression="zip")
+
 # Create an MCP server
 mcp = FastMCP("Demo")
 
