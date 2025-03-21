@@ -3,6 +3,7 @@
 // that csv file is then used by the DeprecatedNPMUpdateInventory script to update the inventory
 import { execSync } from "child_process";
 import fs from "fs";
+import path from "path";
 
 //example useage
 //node ldp.mjs "C:\FabianWorkSpaceGit\sys.CAMS.CAMS.REACT\cams\package-lock.json" "./deprecated-packages.csv" "sys.CAMS.CAMS.REACT"
@@ -18,6 +19,14 @@ import fs from "fs";
 const packageLockPath = process.argv[2];
 const csvFilePath = process.argv[3];
 const gitRepo = process.argv[4];
+
+// Simplified paths - since they're all in the same directory
+const databasePath = "\\\\covtoolsprd01\\SAS\\COVReactCodeCheck\\COVReactCodeCheck.db";
+const tempSqlFile = "temp_insert.sql";
+const sqlLitePath = "\\\\covtoolsprd01\\SAS\\COVReactCodeCheck\\sqlite3.exe";
+
+// Get current directory for relative paths
+// const currentDir = path.dirname(new URL(import.meta.url).pathname.replace(/^\//, ""));
 
 function buildDependencyTree(packages) {
   const tree = {};
@@ -47,6 +56,39 @@ function createCSVContent(data, timestamp) {
   }, header);
 }
 
+// Moved function to the global scope
+function insertDeprecationInfoIntoDatabase(timestamp, tempSqlFile, sqlLitePath, databasePath, deprecatedData) {
+  // Build SQL insert command with Report, ReportDateTime, and AppName columns
+  // also set the busy_timeout to 5000 ms to avoid database lock issues
+  console.log("Inserting status message into the database");
+
+  // Build SQL insert commands for each entry in the deprecatedData array
+  const sqlCommands = `
+  PRAGMA busy_timeout = 5000;
+  ${deprecatedData
+    .map(
+      (data) => `
+  INSERT INTO DeprecationChecks (GitRepo, Parent, Component, Version, Message, StatusMessage, Timestamp) 
+  VALUES ('${data.gitRepo}', '${data.parent}', '${data.component}', '${data.version}', '${data.message}', '${data.statusMessage}', '${timestamp}');
+  `
+    )
+    .join("\n")}
+  `;
+
+  // Write the SQL commands to a temporary file
+  fs.writeFileSync(tempSqlFile, sqlCommands, "utf8");
+
+  // Execute the SQL commands using the .read directive
+  try {
+    execSync(`"${sqlLitePath}" "${databasePath}" ".read ${tempSqlFile}"`, { stdio: "inherit" });
+  } catch (error) {
+    console.error("Error executing SQL commands:", error);
+  }
+
+  // Delete the temporary SQL file
+  fs.unlinkSync(tempSqlFile);
+}
+
 function findDeprecatedPackages(packageLockPath) {
   fs.readFile(packageLockPath, "utf8", (err, data) => {
     if (err) {
@@ -64,6 +106,7 @@ function findDeprecatedPackages(packageLockPath) {
       const packages = packageLock.packages || {};
       const tree = buildDependencyTree(packages);
       const deprecatedData = [];
+      let csvContent = "";
 
       for (const [key, value] of Object.entries(packages)) {
         if (value.deprecated) {
@@ -87,47 +130,32 @@ function findDeprecatedPackages(packageLockPath) {
             parent: topParent,
             component: packageName,
             version: value.version,
-            message: value.deprecated
+            message: value.deprecated,
+            statusMessage: ""
           });
         }
       }
 
-      const databasePath = "C:\\FabianWorkSpaceGit\\COVReactCodeCheck\\COVReactCodeCheck.db";
-      const tempSqlFile = "C:\\FabianWorkSpaceGit\\COVReactCodeCheck\\temp_insert.sql";
-      const sqlLitePath = "C:\\FabianWorkSpaceGit\\COVReactCodeCheck\\sqlite3.exe";
-
-      let csvContent;
       if (deprecatedData.length > 0) {
         csvContent = createCSVContent(deprecatedData, timestamp);
         console.log(`Deprecated packages information written to ${csvFilePath}`);
       } else {
-        csvContent = `GitRepo,Parent,Component,Version,Message,Status Message,Timestamp\n${gitRepo},,,,,No Deprecated Packages Found,${timestamp}\n`;
+        // csvContent = `GitRepo,Parent,Component,Version,Message,Status Message,Timestamp\n${gitRepo},,,,,No Deprecated Packages Found,${timestamp}\n`;
+        deprecatedData.push({
+          gitRepo: gitRepo,
+          parent: "",
+          component: "",
+          version: "",
+          message: "",
+          statusMessage: "No Deprecated Packages Found"
+        });
+        csvContent = createCSVContent(deprecatedData, timestamp);
         console.log("No deprecated packages found. Status written to the file.");
-
-        // Build SQL insert command with Report, ReportDateTime, and AppName columns
-        // also set the busy_timeout to 5000 ms to avoid database lock issues
-        console.log("Inserting status message into the database");
-
-        const sqlCommands = `
-        PRAGMA busy_timeout = 5000;
-        -- Insert the JSON data with current date and time and app name
-        INSERT INTO DeprecationChecks (GitRepo, Parent, Component, Version, Message, StatusMessage, Timestamp) 
-        VALUES ('${gitRepo}', '', '', '', '', 'No Deprecated Packages Found', '${timestamp}');
-        `;
-
-        // Write the SQL commands to a temporary file
-        fs.writeFileSync(tempSqlFile, sqlCommands, "utf8");
-
-        // Execute the SQL commands using the .read directive
-        try {
-          execSync(`"${sqlLitePath}" "${databasePath}" ".read ${tempSqlFile}"`, { stdio: "inherit" });
-        } catch (error) {
-          console.error("Error executing SQL commands:", error);
-        }
-
-        // Delete the temporary SQL file
-        fs.unlinkSync(tempSqlFile);
       }
+      // Write the CSV content to file
+      fs.writeFileSync(csvFilePath, csvContent, "utf8");
+
+      insertDeprecationInfoIntoDatabase(timestamp, tempSqlFile, sqlLitePath, databasePath, deprecatedData);
     } catch (parseErr) {
       console.error("Error parsing JSON:", parseErr);
     }

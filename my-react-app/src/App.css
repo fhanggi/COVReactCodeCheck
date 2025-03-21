@@ -6,13 +6,17 @@
 }
 
 .logo {
-  height: 6em;
+  height: 50px;
+  margin: 10px;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react {
+  animation: logo-spin infinite 20s linear;
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
@@ -34,9 +38,126 @@
 }
 
 .card {
-  padding: 2em;
+  text-align: center;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 400px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.card button:hover {
+  background-color: #218838;
 }
 
 .read-the-docs {
+  text-align: center;
   color: #888;
+  margin-top: 20px;
+}
+
+/* Add styles to match the attached image */
+
+/* General layout */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
+
+h1,
+h2 {
+  color: #444;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Section styling */
+section {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 800px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* List styling */
+ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
+ul ul {
+  list-style-type: circle;
+  margin-left: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+/* Adjust spacing between bullets and text */
+ul li {
+  margin-bottom: 10px;
+  padding-left: 5px; /* Reduce space between bullet and text */
+}
+
+ul ul li {
+  padding-left: 10px; /* Adjust nested list spacing */
+}
+
+/* Responsibilities section */
+.responsibilities {
+  text-align: center;
+}
+
+.responsibilities label {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.responsibilities input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.responsibilities button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.responsibilities button:hover {
+  background-color: #0056b3;
 }
