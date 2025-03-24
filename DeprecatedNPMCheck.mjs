@@ -68,7 +68,7 @@ function insertDeprecationInfoIntoDatabase(timestamp, tempSqlFile, sqlLitePath, 
   ${deprecatedData
     .map(
       (data) => `
-  INSERT INTO DeprecationChecks (GitRepo, Parent, Component, Version, Message, StatusMessage, Timestamp) 
+  INSERT INTO DeprecationChecks (GitRepo, Parent, Component, Version, Message, StatusMessage, CreatedDateTime) 
   VALUES ('${data.gitRepo}', '${data.parent}', '${data.component}', '${data.version}', '${data.message}', '${data.statusMessage}', '${timestamp}');
   `
     )
@@ -76,6 +76,8 @@ function insertDeprecationInfoIntoDatabase(timestamp, tempSqlFile, sqlLitePath, 
   `;
 
   // Write the SQL commands to a temporary file
+  console.log("Writing SQL commands to a temporary file:", sqlCommands);
+
   fs.writeFileSync(tempSqlFile, sqlCommands, "utf8");
 
   // Execute the SQL commands using the .read directive
@@ -89,7 +91,7 @@ function insertDeprecationInfoIntoDatabase(timestamp, tempSqlFile, sqlLitePath, 
   fs.unlinkSync(tempSqlFile);
 }
 
-function findDeprecatedPackages(packageLockPath) {
+function findDeprecatedPackages(packageLockPath, gitRepo) {
   fs.readFile(packageLockPath, "utf8", (err, data) => {
     if (err) {
       console.error("Error reading the file:", err);

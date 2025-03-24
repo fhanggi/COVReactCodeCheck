@@ -1,0 +1,25 @@
+﻿# Deprecation Status Report
+
+Generated on: 03/24/2025 10:46:38
+
+
+## sys.MY.REACT
+Last checked: 3/21/2025, 12:08:11 PM
+
+### Deprecated Packages:
+
+| Component | Parent | Version | Message |
+|-----------|--------|---------|---------|
+| har-validator | Direct Dependency | 5.1.5 | this library is no longer supported |
+| request | Direct Dependency | 2.88.2 | request has been deprecated, see https://github.com/request/request/issues/3142 |
+| uuid | Direct Dependency | 3.4.0 | Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details. |
+
+## undefined
+Last checked: 3/21/2025, 10:00:05 AM
+
+### Deprecated Packages:
+
+| Component | Parent | Version | Message |
+|-----------|--------|---------|---------|
+| undefined | undefined | undefined | undefined |
+

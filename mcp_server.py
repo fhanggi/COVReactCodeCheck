@@ -15,7 +15,9 @@ mcp = FastMCP("Demo")
 def query_data(sql: str) -> str:
     """Execute SQL queries safely"""
     logger.info(f"Executing SQL query: {sql}")
-    conn = sqlite3.connect("./COVReactCodeCheck.db")
+    # conn = sqlite3.connect("./COVReactCodeCheck.db")
+    conn = sqlite3.connect(r"\\covtoolsprd01\SAS\COVReactCodeCheck\COVReactCodeCheck.db")
+    
     try:
         result = conn.execute(sql).fetchall()
         conn.commit()

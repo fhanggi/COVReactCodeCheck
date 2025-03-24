@@ -1,3 +1,15 @@
 2025-03-19 12:13:43.709 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
 2025-03-19 12:14:02.462 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT * FROM DeprecationChecks
 2025-03-19 15:59:15.474 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:16:06.065 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:16:34.353 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:17:54.081 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:19:35.286 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:20:49.808 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:21:55.815 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT name FROM sqlite_master WHERE type='table';
+2025-03-24 10:23:00.953 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT MAX(timestamp) FROM DeprecationChecks
+2025-03-24 10:23:45.367 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT * FROM DeprecationChecks
+2025-03-24 10:26:28.219 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT * FROM DeprecationChecks
+2025-03-24 10:27:35.937 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT MAX(timestamp) FROM AuditReports
+2025-03-24 10:28:08.668 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT MAX(ReportDateTime) FROM AuditReports
+2025-03-24 10:34:53.510 | INFO     | __main__:query_data:17 - Executing SQL query: SELECT MAX(ReportDateTime) FROM AuditReports

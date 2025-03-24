@@ -1,6 +1,6 @@
 # Define the path to the SQLite database
-$databasePath = "C:\Code\COVReactCodeCheck\COVReactCodeCheck.db"
-$outputFile = "C:\Code\COVReactCodeCheck\VulnerabilityReport.txt"
+$databasePath = "\\covtoolsprd01\SAS\COVReactCodeCheck\COVReactCodeCheck.db"
+$outputFile = "\\covtoolsprd01\SAS\COVReactCodeCheck\VulnerabilityReport.txt"
 
 # SQL query to extract vulnerability data from JSON
 $sqlQuery = @"
@@ -40,7 +40,7 @@ ORDER BY pk.ReportDateTime DESC, pk.PackageName;
 "@
 
 # Execute the SQL query and save results to a file
-& "C:\Code\COVReactCodeCheck\sqlite3.exe" -header -column $databasePath $sqlQuery | Out-File -FilePath $outputFile
+& "\\covtoolsprd01\SAS\COVReactCodeCheck\sqlite3.exe" -header -column $databasePath $sqlQuery | Out-File -FilePath $outputFile
 
 # Display the results in the console
 Write-Host "Vulnerability Report:"
@@ -85,8 +85,8 @@ ORDER BY pk.ReportDateTime DESC, pk.PackageName;
 "@
 
 # Execute the detailed query and save results to a detailed report file
-$detailedOutputFile = "C:\Code\COVReactCodeCheck\DetailedVulnerabilityReport.txt"
-& "C:\Code\COVReactCodeCheck\sqlite3.exe" -header -column $databasePath $detailedQuery | Out-File -FilePath $detailedOutputFile
+$detailedOutputFile = "\\covtoolsprd01\SAS\COVReactCodeCheck\DetailedVulnerabilityReport.txt"
+& "\\covtoolsprd01\SAS\COVReactCodeCheck\sqlite3.exe" -header -column $databasePath $detailedQuery | Out-File -FilePath $detailedOutputFile
 
 # Display information about the reports
 Write-Host "`nDetailed vulnerability advisories saved to: $detailedOutputFile"
